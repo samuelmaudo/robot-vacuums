@@ -1,11 +1,17 @@
 from typing import Set
 
 from app.exceptions import (
-    InvalidCardinalPoint,
+    InvalidMowerHeading,
+    InvalidPlateauCoordinates,
     PositionDoesNotExist,
-    PositionIsNotEmpty
+    PositionIsNotEmpty,
+    UnknownInstruction
 )
-from app.values import Coordinates, CardinalPoint
+from app.values import (
+    CardinalPoint,
+    Coordinates,
+    Instruction
+)
 
 __all__ = ('Mower', 'Plateau')
 
@@ -23,6 +29,16 @@ class Mower:
         self.position = position
         self.heading = heading
 
+    def process(self, instruction: Instruction) -> None:
+        if instruction is Instruction.TURN_LEFT:
+            self.turn_left()
+        elif instruction is Instruction.TURN_RIGHT:
+            self.turn_right()
+        elif instruction is Instruction.MOVE_FORWARD:
+            self.move_forward()
+        else:
+            raise UnknownInstruction(instruction)
+
     def move_forward(self) -> None:
         x = self.position.x
         y = self.position.y
@@ -36,7 +52,7 @@ class Mower:
         elif self.heading is CardinalPoint.WEST:
             x -= 1
         else:
-            raise InvalidCardinalPoint(self.heading)
+            raise InvalidMowerHeading(self.heading)
 
         new_position = Coordinates(x, y)
         self.plateau.validate(new_position)
@@ -52,7 +68,7 @@ class Mower:
         elif self.heading is CardinalPoint.WEST:
             new_heading = CardinalPoint.SOUTH
         else:
-            raise InvalidCardinalPoint(self.heading)
+            raise InvalidMowerHeading(self.heading)
 
         self.heading = new_heading
 
@@ -66,7 +82,7 @@ class Mower:
         elif self.heading is CardinalPoint.WEST:
             new_heading = CardinalPoint.NORTH
         else:
-            raise InvalidCardinalPoint(self.heading)
+            raise InvalidMowerHeading(self.heading)
 
         self.heading = new_heading
 
@@ -74,6 +90,9 @@ class Mower:
 class Plateau:
 
     def __init__(self, top_right_corner: Coordinates) -> None:
+        if top_right_corner.x <= 0 or top_right_corner.y <= 0:
+            raise InvalidPlateauCoordinates(top_right_corner)
+
         self.max_x = top_right_corner.x
         self.max_y = top_right_corner.y
         self.mowers: Set[Mower] = set()

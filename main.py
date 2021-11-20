@@ -18,13 +18,4 @@ def process(request: str) -> None:
 
 
 if __name__ == '__main__':
-    # request = '5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM'
-    # expected_response = '1 3 N\n5 1 E'
-    #
-    # controller = MowerController()
-    # response = controller.handle(request)
-    #
-    # assert response == expected_response
-    #
-    # print('OK')
     app()

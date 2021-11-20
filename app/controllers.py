@@ -2,7 +2,7 @@ from collections import OrderedDict
 from typing import Dict, List
 
 from app.entities import Mower, Plateau
-from app.exceptions import InvalidRequest, UnknownInstruction
+from app.exceptions import InvalidRequest
 from app.values import CardinalPoint, Coordinates, Instruction
 
 
@@ -31,14 +31,7 @@ class MowerController:
 
         for mower, instructions in mowers.items():
             for instruction in instructions:
-                if instruction is Instruction.TURN_LEFT:
-                    mower.turn_left()
-                elif instruction is Instruction.TURN_RIGHT:
-                    mower.turn_right()
-                elif instruction is Instruction.MOVE_FORWARD:
-                    mower.move_forward()
-                else:
-                    raise UnknownInstruction(instruction)
+                mower.process(instruction)
 
         response = ''
         for mower in mowers.keys():
