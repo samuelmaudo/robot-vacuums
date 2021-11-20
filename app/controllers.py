@@ -1,5 +1,4 @@
-from collections import OrderedDict
-from typing import Dict, List
+from typing import List, Tuple
 
 from app.entities import Mower, Plateau
 from app.exceptions import InvalidRequest
@@ -16,7 +15,7 @@ class MowerController:
 
         pieces = lines[0].strip().split(' ', 1)
         plateau = Plateau(Coordinates(int(pieces[0]), int(pieces[1])))
-        mowers: Dict[Mower, List[Instruction]] = OrderedDict()
+        mowers: List[Tuple[Mower, List[Instruction]]] = []
 
         for i, line in enumerate(lines[1:]):
             if i % 2 == 0:
@@ -27,14 +26,14 @@ class MowerController:
                 )
             else:
                 instructions = [Instruction(letter) for letter in line.strip()]
-                mowers[mower] = instructions
+                mowers.append((mower, instructions))
 
-        for mower, instructions in mowers.items():
+        for mower, instructions in mowers:
             for instruction in instructions:
                 mower.process(instruction)
 
         response = ''
-        for mower in mowers.keys():
+        for mower, _ in mowers:
             response += f'{mower.position.x} {mower.position.y} {mower.heading.value}\n'
 
         return response.strip()
