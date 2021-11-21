@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+
+  command:
+    build:
+      context: .
+      target: command
+    image: robotic-mowers
+
+  tests:
+    build:
+      context: .
+      target: tests
+    image:
+      robotic-mowers-tests
