@@ -5,7 +5,7 @@
 Running the command as a containerized app is as easy as placing this inside the
 root folder:
 
-```commandline
+```shell
 docker-compose run --rm command
 ```
 
@@ -70,13 +70,13 @@ and manages a virtualenv for your projects, as well as adds/removes packages.
 If you do not have Pipenv, but you already have Python and pip, you can easily 
 install Pipenv into your home directory:
 
-```commandline
+```shell
 pip install --user pipenv
 ```
 
 Once Pipenv is installed, place this command in the project folder:
 
-```commandline
+```shell
 python -m pipenv install --dev
 ```
 
@@ -85,18 +85,18 @@ Otherwise, you can omit it.
 
 Then, activate the virtualenv:
 
-```commandline
+```shell
 python -m pipenv shell
 ```
 
 Finally, you will be able to run the command:
 
-```commandline
+```shell
 python main.py $'5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM'
 ```
 
 And the test suite:
 
-```commandline
+```shell
 pytest tests
 ```
