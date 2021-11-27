@@ -3,7 +3,7 @@ from app.values import CardinalPoint, Coordinates, Instruction
 __all__ = (
     'InvalidRequest',
     'InvalidSurfaceCoordinates',
-    'InvalidVacuumHeading',
+    'InvalidVacuumDirection',
     'InvalidVacuumPosition',
     'PositionDoesNotExist',
     'PositionIsNotEmpty',
@@ -24,10 +24,10 @@ class InvalidSurfaceCoordinates(ValueError):
         super().__init__(msg)
 
 
-class InvalidVacuumHeading(ValueError):
+class InvalidVacuumDirection(ValueError):
 
-    def __init__(self, heading: CardinalPoint) -> None:
-        super().__init__(f'Vacuum heading is not valid: {heading}')
+    def __init__(self, direction: CardinalPoint) -> None:
+        super().__init__(f'Vacuum direction is not valid: {direction}')
 
 
 class InvalidVacuumPosition(ValueError):

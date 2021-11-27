@@ -2,7 +2,7 @@ from typing import Set
 
 from app.exceptions import (
     InvalidSurfaceCoordinates,
-    InvalidVacuumHeading,
+    InvalidVacuumDirection,
     PositionDoesNotExist,
     PositionIsNotEmpty,
     UnknownInstruction
@@ -22,12 +22,12 @@ class Vacuum:
         self,
         surface: 'Surface',
         position: Coordinates,
-        heading: CardinalPoint
+        direction: CardinalPoint
     ) -> None:
         surface.validate(position)
         self.surface = surface
         self.position = position
-        self.heading = heading
+        self.direction = direction
 
     def process(self, instruction: Instruction) -> None:
         if instruction is Instruction.TURN_LEFT:
@@ -43,48 +43,48 @@ class Vacuum:
         x = self.position.x
         y = self.position.y
 
-        if self.heading is CardinalPoint.NORTH:
+        if self.direction is CardinalPoint.NORTH:
             y += 1
-        elif self.heading is CardinalPoint.EAST:
+        elif self.direction is CardinalPoint.EAST:
             x += 1
-        elif self.heading is CardinalPoint.SOUTH:
+        elif self.direction is CardinalPoint.SOUTH:
             y -= 1
-        elif self.heading is CardinalPoint.WEST:
+        elif self.direction is CardinalPoint.WEST:
             x -= 1
         else:
-            raise InvalidVacuumHeading(self.heading)
+            raise InvalidVacuumDirection(self.direction)
 
         new_position = Coordinates(x, y)
         self.surface.validate(new_position)
         self.position = new_position
 
     def turn_left(self) -> None:
-        if self.heading is CardinalPoint.NORTH:
-            new_heading = CardinalPoint.WEST
-        elif self.heading is CardinalPoint.EAST:
-            new_heading = CardinalPoint.NORTH
-        elif self.heading is CardinalPoint.SOUTH:
-            new_heading = CardinalPoint.EAST
-        elif self.heading is CardinalPoint.WEST:
-            new_heading = CardinalPoint.SOUTH
+        if self.direction is CardinalPoint.NORTH:
+            new_direction = CardinalPoint.WEST
+        elif self.direction is CardinalPoint.EAST:
+            new_direction = CardinalPoint.NORTH
+        elif self.direction is CardinalPoint.SOUTH:
+            new_direction = CardinalPoint.EAST
+        elif self.direction is CardinalPoint.WEST:
+            new_direction = CardinalPoint.SOUTH
         else:
-            raise InvalidVacuumHeading(self.heading)
+            raise InvalidVacuumDirection(self.direction)
 
-        self.heading = new_heading
+        self.direction = new_direction
 
     def turn_right(self) -> None:
-        if self.heading is CardinalPoint.NORTH:
-            new_heading = CardinalPoint.EAST
-        elif self.heading is CardinalPoint.EAST:
-            new_heading = CardinalPoint.SOUTH
-        elif self.heading is CardinalPoint.SOUTH:
-            new_heading = CardinalPoint.WEST
-        elif self.heading is CardinalPoint.WEST:
-            new_heading = CardinalPoint.NORTH
+        if self.direction is CardinalPoint.NORTH:
+            new_direction = CardinalPoint.EAST
+        elif self.direction is CardinalPoint.EAST:
+            new_direction = CardinalPoint.SOUTH
+        elif self.direction is CardinalPoint.SOUTH:
+            new_direction = CardinalPoint.WEST
+        elif self.direction is CardinalPoint.WEST:
+            new_direction = CardinalPoint.NORTH
         else:
-            raise InvalidVacuumHeading(self.heading)
+            raise InvalidVacuumDirection(self.direction)
 
-        self.heading = new_heading
+        self.direction = new_direction
 
 
 class Surface:
@@ -97,9 +97,9 @@ class Surface:
         self.max_y = top_right_corner.y
         self.vacuums: Set[Vacuum] = set()
 
-    def add_vacuum(self, position: Coordinates, heading: CardinalPoint) -> Vacuum:
+    def add_vacuum(self, position: Coordinates, direction: CardinalPoint) -> Vacuum:
         self.validate(position)
-        vacuum = Vacuum(self, position, heading)
+        vacuum = Vacuum(self, position, direction)
         self.vacuums.add(vacuum)
         return vacuum
 

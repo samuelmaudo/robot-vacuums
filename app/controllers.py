@@ -34,6 +34,6 @@ class VacuumController:
 
         response = ''
         for vacuum, _ in vacuums:
-            response += f'{vacuum.position.x} {vacuum.position.y} {vacuum.heading.value}\n'
+            response += f'{vacuum.position.x} {vacuum.position.y} {vacuum.direction.value}\n'
 
         return response.strip()
