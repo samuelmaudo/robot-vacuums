@@ -1,16 +1,46 @@
 # Robot Vacuums
 
-## Run command through Docker
+## Introduction
 
-Running the command as a containerized app is as easy as placing this inside the
-root folder:
+This project is a small experiment for building a CLI application with 
+[Typer](https://typer.tiangolo.com/).
 
-```shell
-docker-compose run --rm command
+The problem to be solved is to clean a surface with some robot vacuum cleaners.
+However, these robots are not very intelligent, and need to be instructed.
+
+To simplify the problem, the surface will be rectangular, and divided into a grid.
+
+## How does it works?
+
+I have implemented a command which accepts an input with the size of the surface 
+and the position of each vacuum cleaner. For example:
+
+```
+5 5
+1 2 N
+LFLFLFLFF
+3 3 E
+FFRFFRFRRF
 ```
 
-The provided input test case will be processed by default, resulting in this 
-output: 
+The first line is the upper-right coordinates of the surface (the bottom-left 
+coordinates are assumed to be 0, 0).
+
+The rest of the input is information relating to the vacuums that have been 
+deployed. Each vacuum has two input lines. The first line gives the position 
+of the vacuum, and the second line is a series of instructions telling the 
+vacuum how to traverse the surface.
+
+The position consists of two integers and a letter separated by spaces, 
+corresponding to the X and Y coordinates and the direction of the vacuum.
+
+The instructions are given with three different letters: “L” makes the vacuum 
+turn 90 degrees to the left (without moving from its current position), “R” 
+produces the same effect but to the right, and “F” commands to move one grid 
+point forward (keeping the same direction).
+
+The command outputs the results on several lines. For example, the above input 
+produces this output:
 
 ```
 DONE
@@ -18,16 +48,27 @@ DONE
 5 1 E
 ```
 
-If you want to process a different input, just add it to the end:
+The first line informs whether all instructions have been executed or not. 
+Subsequent lines show the end position of each vacuum.
+
+The instructions are executed in parallel. If an instruction fails, it is retried
+until the other vacuums have finished their instructions, or can not move.
+
+## Run command through Docker
+
+To make it easier to run the command, I have prepared a Docker Compose file.
+If you have [Docker](https://www.docker.com/products/docker-desktop) installed, 
+it is as simple as placing this inside the root folder:
+
+```shell
+docker-compose run --rm command
+```
+
+The example input will be processed by default, but if you want to process a 
+different input, just add it to the end:
 
 ```shell
 docker-compose run --rm command $'0 5\n1 2 N\nLFLFLFLFF\n3 3 E\nFFRFFRFRRF'
-```
-
-For example, the previous input will result in this output:
-
-```
-Surface coordinates are not valid: 0 5
 ```
 
 _Note:_ If you want to run the command on Windows, you will have to make some 
@@ -45,7 +86,8 @@ To run the test suite, place this command inside the root folder:
 docker-compose run --rm tests
 ```
 
-Tests are running with **pytest**, so the output will be similar to this:
+Tests are running with [pytest](https://docs.pytest.org/), so the output will be 
+similar to this:
 
 ```
 ============================== test session starts =============================
