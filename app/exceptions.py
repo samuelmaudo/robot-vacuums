@@ -1,26 +1,14 @@
 from app.values import CardinalPoint, Coordinates, Instruction
 
 __all__ = (
-    'InvalidMowerHeading',
-    'InvalidMowerPosition',
     'InvalidPlateauCoordinates',
     'InvalidRequest',
+    'InvalidVacuumHeading',
+    'InvalidVacuumPosition',
     'PositionDoesNotExist',
     'PositionIsNotEmpty',
     'UnknownInstruction',
 )
-
-
-class InvalidMowerHeading(ValueError):
-
-    def __init__(self, heading: CardinalPoint) -> None:
-        super().__init__(f'Mower heading is not valid: {heading}')
-
-
-class InvalidMowerPosition(ValueError):
-
-    def __init__(self, position: Coordinates) -> None:
-        super().__init__(f'Mower position is not valid: {position}')
 
 
 class InvalidPlateauCoordinates(ValueError):
@@ -36,18 +24,30 @@ class InvalidRequest(ValueError):
         super().__init__(f'Request is not well formatted:\n{request}')
 
 
-class PositionDoesNotExist(InvalidMowerPosition):
+class InvalidVacuumHeading(ValueError):
+
+    def __init__(self, heading: CardinalPoint) -> None:
+        super().__init__(f'Vacuum heading is not valid: {heading}')
+
+
+class InvalidVacuumPosition(ValueError):
+
+    def __init__(self, position: Coordinates) -> None:
+        super().__init__(f'Vacuum position is not valid: {position}')
+
+
+class PositionDoesNotExist(InvalidVacuumPosition):
 
     def __init__(self, position: Coordinates) -> None:
         msg = f'Position outside the plateau boundaries: {position}'
-        super(InvalidMowerPosition, self).__init__(msg)
+        super(InvalidVacuumPosition, self).__init__(msg)
 
 
-class PositionIsNotEmpty(InvalidMowerPosition):
+class PositionIsNotEmpty(InvalidVacuumPosition):
 
     def __init__(self, position: Coordinates) -> None:
-        msg = f'Position occupied by another mower: {position}'
-        super(InvalidMowerPosition, self).__init__(msg)
+        msg = f'Position occupied by another vacuum: {position}'
+        super(InvalidVacuumPosition, self).__init__(msg)
 
 
 class UnknownInstruction(ValueError):

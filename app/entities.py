@@ -1,8 +1,8 @@
 from typing import Set
 
 from app.exceptions import (
-    InvalidMowerHeading,
     InvalidPlateauCoordinates,
+    InvalidVacuumHeading,
     PositionDoesNotExist,
     PositionIsNotEmpty,
     UnknownInstruction
@@ -13,10 +13,10 @@ from app.values import (
     Instruction
 )
 
-__all__ = ('Mower', 'Plateau')
+__all__ = ('Vacuum', 'Plateau')
 
 
-class Mower:
+class Vacuum:
 
     def __init__(
         self,
@@ -52,7 +52,7 @@ class Mower:
         elif self.heading is CardinalPoint.WEST:
             x -= 1
         else:
-            raise InvalidMowerHeading(self.heading)
+            raise InvalidVacuumHeading(self.heading)
 
         new_position = Coordinates(x, y)
         self.plateau.validate(new_position)
@@ -68,7 +68,7 @@ class Mower:
         elif self.heading is CardinalPoint.WEST:
             new_heading = CardinalPoint.SOUTH
         else:
-            raise InvalidMowerHeading(self.heading)
+            raise InvalidVacuumHeading(self.heading)
 
         self.heading = new_heading
 
@@ -82,7 +82,7 @@ class Mower:
         elif self.heading is CardinalPoint.WEST:
             new_heading = CardinalPoint.NORTH
         else:
-            raise InvalidMowerHeading(self.heading)
+            raise InvalidVacuumHeading(self.heading)
 
         self.heading = new_heading
 
@@ -95,22 +95,22 @@ class Plateau:
 
         self.max_x = top_right_corner.x
         self.max_y = top_right_corner.y
-        self.mowers: Set[Mower] = set()
+        self.vacuums: Set[Vacuum] = set()
 
-    def add_mower(self, position: Coordinates, heading: CardinalPoint) -> Mower:
+    def add_vacuum(self, position: Coordinates, heading: CardinalPoint) -> Vacuum:
         self.validate(position)
-        mower = Mower(self, position, heading)
-        self.mowers.add(mower)
-        return mower
+        vacuum = Vacuum(self, position, heading)
+        self.vacuums.add(vacuum)
+        return vacuum
 
-    def remove_mower(self, mower: Mower) -> None:
-        self.mowers.remove(mower)
+    def remove_vacuum(self, vacuum: Vacuum) -> None:
+        self.vacuums.remove(vacuum)
 
     def validate(self, position: Coordinates) -> None:
         if (position.x < 0 or position.x > self.max_x
                 or position.y < 0 or position.y > self.max_y):
             raise PositionDoesNotExist(position)
 
-        for mower in self.mowers:
-            if position == mower.position:
+        for vacuum in self.vacuums:
+            if position == vacuum.position:
                 raise PositionIsNotEmpty(position)

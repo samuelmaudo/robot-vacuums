@@ -1,16 +1,16 @@
 import pytest
 
-from app.controllers import MowerController
+from app.controllers import VacuumController
 from app.exceptions import (
-    InvalidMowerPosition,
     InvalidPlateauCoordinates,
-    InvalidRequest
+    InvalidRequest,
+    InvalidVacuumPosition
 )
 
 
 @pytest.fixture
 def controller():
-    return MowerController()
+    return VacuumController()
 
 
 @pytest.fixture
@@ -46,23 +46,23 @@ def invalid_plateau_coordinates():
 
 
 @pytest.fixture
-def invalid_mower_coordinates():
+def invalid_vacuum_coordinates():
     return [
         ('5 5\n-1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         InvalidMowerPosition,
+         InvalidVacuumPosition,
          'Position outside the plateau boundaries: -1 2'),
         ('5 5\n1 -2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         InvalidMowerPosition,
+         InvalidVacuumPosition,
          'Position outside the plateau boundaries: 1 -2'),
         ('5 5\n10 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         InvalidMowerPosition,
+         InvalidVacuumPosition,
          'Position outside the plateau boundaries: 10 2'),
         ('5 5\n1 20 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         InvalidMowerPosition,
+         InvalidVacuumPosition,
          'Position outside the plateau boundaries: 1 20'),
         ('5 5\n1 2 N\nLMLMLMLMM\n1 2 E\nMMRMMRMRRM',
-         InvalidMowerPosition,
-         'Position occupied by another mower: 1 2'),
+         InvalidVacuumPosition,
+         'Position occupied by another vacuum: 1 2'),
     ]
 
 
@@ -108,8 +108,8 @@ def test_invalid_plateau_coordinates(controller, invalid_plateau_coordinates):
             controller.handle(request)
 
 
-def test_invalid_mower_coordinates(controller, invalid_mower_coordinates):
-    for request, exception, message in invalid_mower_coordinates:
+def test_invalid_vacuum_coordinates(controller, invalid_vacuum_coordinates):
+    for request, exception, message in invalid_vacuum_coordinates:
         with pytest.raises(exception, match=message):
             controller.handle(request)
 

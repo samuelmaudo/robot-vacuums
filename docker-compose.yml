@@ -6,11 +6,11 @@ services:
     build:
       context: .
       target: command
-    image: robotic-mowers
+    image: robot-vacuums
 
   tests:
     build:
       context: .
       target: tests
     image:
-      robotic-mowers-tests
+      robot-vacuums-tests

@@ -1,13 +1,13 @@
 import typer
 
-from app.controllers import MowerController
+from app.controllers import VacuumController
 
 app = typer.Typer()
 
 
 @app.command()
 def process(request: str) -> None:
-    controller = MowerController()
+    controller = VacuumController()
     try:
         response = controller.handle(request)
     except ValueError as e:

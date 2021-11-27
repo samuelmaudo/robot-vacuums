@@ -38,7 +38,7 @@ def invalid_plateau_coordinates():
 
 
 @pytest.fixture
-def invalid_mower_coordinates():
+def invalid_vacuum_coordinates():
     return [
         ('5 5\n-1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
          'Position outside the plateau boundaries: -1 2'),
@@ -49,7 +49,7 @@ def invalid_mower_coordinates():
         ('5 5\n1 20 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
          'Position outside the plateau boundaries: 1 20'),
         ('5 5\n1 2 N\nLMLMLMLMM\n1 2 E\nMMRMMRMRRM',
-         'Position occupied by another mower: 1 2'),
+         'Position occupied by another vacuum: 1 2'),
     ]
 
 
@@ -94,8 +94,8 @@ def test_invalid_plateau_coordinates(runner, invalid_plateau_coordinates):
         assert f'{response}\n' == result.stdout
 
 
-def test_invalid_mower_coordinates(runner, invalid_mower_coordinates):
-    for request, response in invalid_mower_coordinates:
+def test_invalid_vacuum_coordinates(runner, invalid_vacuum_coordinates):
+    for request, response in invalid_vacuum_coordinates:
         result = runner.invoke(main.app, [request])
         assert 1 == result.exit_code
         assert f'{response}\n' == result.stdout
