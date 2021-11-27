@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from app.entities import Vacuum, Plateau
+from app.entities import Vacuum, Surface
 from app.exceptions import InvalidRequest
 from app.values import CardinalPoint, Coordinates, Instruction
 
@@ -14,13 +14,13 @@ class VacuumController:
             raise InvalidRequest(request)
 
         pieces = lines[0].strip().split(' ', 1)
-        plateau = Plateau(Coordinates(int(pieces[0]), int(pieces[1])))
+        surface = Surface(Coordinates(int(pieces[0]), int(pieces[1])))
         vacuums: List[Tuple[Vacuum, List[Instruction]]] = []
 
         for i, line in enumerate(lines[1:]):
             if i % 2 == 0:
                 pieces = line.strip().split(' ', 2)
-                vacuum = plateau.add_vacuum(
+                vacuum = surface.add_vacuum(
                     Coordinates(int(pieces[0]), int(pieces[1])),
                     CardinalPoint(pieces[2])
                 )

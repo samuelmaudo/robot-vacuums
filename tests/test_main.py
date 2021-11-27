@@ -28,12 +28,12 @@ def invalid_requests():
 
 
 @pytest.fixture
-def invalid_plateau_coordinates():
+def invalid_surface_coordinates():
     return [
         ('0 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         'Plateau coordinates are not valid: 0 5'),
+         'Surface coordinates are not valid: 0 5'),
         ('5 -1\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         'Plateau coordinates are not valid: 5 -1'),
+         'Surface coordinates are not valid: 5 -1'),
     ]
 
 
@@ -41,13 +41,13 @@ def invalid_plateau_coordinates():
 def invalid_vacuum_coordinates():
     return [
         ('5 5\n-1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         'Position outside the plateau boundaries: -1 2'),
+         'Position outside the surface limits: -1 2'),
         ('5 5\n1 -2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         'Position outside the plateau boundaries: 1 -2'),
+         'Position outside the surface limits: 1 -2'),
         ('5 5\n10 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         'Position outside the plateau boundaries: 10 2'),
+         'Position outside the surface limits: 10 2'),
         ('5 5\n1 20 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         'Position outside the plateau boundaries: 1 20'),
+         'Position outside the surface limits: 1 20'),
         ('5 5\n1 2 N\nLMLMLMLMM\n1 2 E\nMMRMMRMRRM',
          'Position occupied by another vacuum: 1 2'),
     ]
@@ -87,8 +87,8 @@ def test_invalid_requests(runner, invalid_requests):
         assert f'{response}\n' == result.stdout
 
 
-def test_invalid_plateau_coordinates(runner, invalid_plateau_coordinates):
-    for request, response in invalid_plateau_coordinates:
+def test_invalid_surface_coordinates(runner, invalid_surface_coordinates):
+    for request, response in invalid_surface_coordinates:
         result = runner.invoke(main.app, [request])
         assert 1 == result.exit_code
         assert f'{response}\n' == result.stdout

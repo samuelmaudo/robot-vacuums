@@ -1,7 +1,7 @@
 from typing import Set
 
 from app.exceptions import (
-    InvalidPlateauCoordinates,
+    InvalidSurfaceCoordinates,
     InvalidVacuumHeading,
     PositionDoesNotExist,
     PositionIsNotEmpty,
@@ -13,19 +13,19 @@ from app.values import (
     Instruction
 )
 
-__all__ = ('Vacuum', 'Plateau')
+__all__ = ('Vacuum', 'Surface')
 
 
 class Vacuum:
 
     def __init__(
         self,
-        plateau: 'Plateau',
+        surface: 'Surface',
         position: Coordinates,
         heading: CardinalPoint
     ) -> None:
-        plateau.validate(position)
-        self.plateau = plateau
+        surface.validate(position)
+        self.surface = surface
         self.position = position
         self.heading = heading
 
@@ -55,7 +55,7 @@ class Vacuum:
             raise InvalidVacuumHeading(self.heading)
 
         new_position = Coordinates(x, y)
-        self.plateau.validate(new_position)
+        self.surface.validate(new_position)
         self.position = new_position
 
     def turn_left(self) -> None:
@@ -87,11 +87,11 @@ class Vacuum:
         self.heading = new_heading
 
 
-class Plateau:
+class Surface:
 
     def __init__(self, top_right_corner: Coordinates) -> None:
         if top_right_corner.x <= 0 or top_right_corner.y <= 0:
-            raise InvalidPlateauCoordinates(top_right_corner)
+            raise InvalidSurfaceCoordinates(top_right_corner)
 
         self.max_x = top_right_corner.x
         self.max_y = top_right_corner.y

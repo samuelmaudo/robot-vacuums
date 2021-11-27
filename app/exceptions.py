@@ -1,8 +1,8 @@
 from app.values import CardinalPoint, Coordinates, Instruction
 
 __all__ = (
-    'InvalidPlateauCoordinates',
     'InvalidRequest',
+    'InvalidSurfaceCoordinates',
     'InvalidVacuumHeading',
     'InvalidVacuumPosition',
     'PositionDoesNotExist',
@@ -11,17 +11,17 @@ __all__ = (
 )
 
 
-class InvalidPlateauCoordinates(ValueError):
-
-    def __init__(self, coordinates: Coordinates) -> None:
-        msg = f'Plateau coordinates are not valid: {coordinates}'
-        super().__init__(msg)
-
-
 class InvalidRequest(ValueError):
 
     def __init__(self, request: str) -> None:
         super().__init__(f'Request is not well formatted:\n{request}')
+
+
+class InvalidSurfaceCoordinates(ValueError):
+
+    def __init__(self, coordinates: Coordinates) -> None:
+        msg = f'Surface coordinates are not valid: {coordinates}'
+        super().__init__(msg)
 
 
 class InvalidVacuumHeading(ValueError):
@@ -39,7 +39,7 @@ class InvalidVacuumPosition(ValueError):
 class PositionDoesNotExist(InvalidVacuumPosition):
 
     def __init__(self, position: Coordinates) -> None:
-        msg = f'Position outside the plateau boundaries: {position}'
+        msg = f'Position outside the surface limits: {position}'
         super(InvalidVacuumPosition, self).__init__(msg)
 
 

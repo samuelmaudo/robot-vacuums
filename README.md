@@ -26,7 +26,7 @@ docker-compose run --rm command $'0 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM'
 For example, the previous input will result in this output:
 
 ```
-Plateau coordinates are not valid: 0 5
+Surface coordinates are not valid: 0 5
 ```
 
 _Note:_ If you want to run the command on Windows, you will have to make some 

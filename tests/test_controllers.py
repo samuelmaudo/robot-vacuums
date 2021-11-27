@@ -2,8 +2,8 @@ import pytest
 
 from app.controllers import VacuumController
 from app.exceptions import (
-    InvalidPlateauCoordinates,
     InvalidRequest,
+    InvalidSurfaceCoordinates,
     InvalidVacuumPosition
 )
 
@@ -34,14 +34,14 @@ def invalid_requests():
 
 
 @pytest.fixture
-def invalid_plateau_coordinates():
+def invalid_surface_coordinates():
     return [
         ('0 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         InvalidPlateauCoordinates,
-         'Plateau coordinates are not valid: 0 5'),
+         InvalidSurfaceCoordinates,
+         'Surface coordinates are not valid: 0 5'),
         ('5 -1\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
-         InvalidPlateauCoordinates,
-         'Plateau coordinates are not valid: 5 -1'),
+         InvalidSurfaceCoordinates,
+         'Surface coordinates are not valid: 5 -1'),
     ]
 
 
@@ -50,16 +50,16 @@ def invalid_vacuum_coordinates():
     return [
         ('5 5\n-1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
          InvalidVacuumPosition,
-         'Position outside the plateau boundaries: -1 2'),
+         'Position outside the surface limits: -1 2'),
         ('5 5\n1 -2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
          InvalidVacuumPosition,
-         'Position outside the plateau boundaries: 1 -2'),
+         'Position outside the surface limits: 1 -2'),
         ('5 5\n10 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
          InvalidVacuumPosition,
-         'Position outside the plateau boundaries: 10 2'),
+         'Position outside the surface limits: 10 2'),
         ('5 5\n1 20 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM',
          InvalidVacuumPosition,
-         'Position outside the plateau boundaries: 1 20'),
+         'Position outside the surface limits: 1 20'),
         ('5 5\n1 2 N\nLMLMLMLMM\n1 2 E\nMMRMMRMRRM',
          InvalidVacuumPosition,
          'Position occupied by another vacuum: 1 2'),
@@ -102,8 +102,8 @@ def test_invalid_requests(controller, invalid_requests):
             controller.handle(request)
 
 
-def test_invalid_plateau_coordinates(controller, invalid_plateau_coordinates):
-    for request, exception, message in invalid_plateau_coordinates:
+def test_invalid_surface_coordinates(controller, invalid_surface_coordinates):
+    for request, exception, message in invalid_surface_coordinates:
         with pytest.raises(exception, match=message):
             controller.handle(request)
 
