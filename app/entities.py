@@ -1,11 +1,12 @@
-from typing import Set
+from typing import List, Iterable
 
 from app.exceptions import (
     InvalidSurfaceCoordinates,
     InvalidVacuumDirection,
+    NoFurtherInstructions,
     PositionDoesNotExist,
     PositionIsNotEmpty,
-    UnknownInstruction
+    UnknownInstruction,
 )
 from app.values import (
     CardinalPoint,
@@ -22,24 +23,43 @@ class Vacuum:
         self,
         surface: 'Surface',
         position: Coordinates,
-        direction: CardinalPoint
+        direction: CardinalPoint,
+        instructions: Iterable[Instruction]
     ) -> None:
         surface.validate(position)
         self.surface = surface
         self.position = position
         self.direction = direction
+        self.instructions = tuple(instructions)
+        self.next_instruction = 0
 
-    def process(self, instruction: Instruction) -> None:
+    @property
+    def processed_instructions(self):
+        return self.instructions[:self.next_instruction]
+
+    @property
+    def pending_instructions(self):
+        return self.instructions[self.next_instruction:]
+
+    def process_next_instruction(self) -> None:
+        if self.next_instruction >= len(self.instructions):
+            raise NoFurtherInstructions
+
+        instruction = self.instructions[self.next_instruction]
+        self._process(instruction)
+        self.next_instruction += 1
+
+    def _process(self, instruction: Instruction) -> None:
         if instruction is Instruction.TURN_LEFT:
-            self.turn_left()
+            self._turn_left()
         elif instruction is Instruction.TURN_RIGHT:
-            self.turn_right()
+            self._turn_right()
         elif instruction is Instruction.MOVE_FORWARD:
-            self.move_forward()
+            self._move_forward()
         else:
             raise UnknownInstruction(instruction)
 
-    def move_forward(self) -> None:
+    def _move_forward(self) -> None:
         x = self.position.x
         y = self.position.y
 
@@ -58,7 +78,7 @@ class Vacuum:
         self.surface.validate(new_position)
         self.position = new_position
 
-    def turn_left(self) -> None:
+    def _turn_left(self) -> None:
         if self.direction is CardinalPoint.NORTH:
             new_direction = CardinalPoint.WEST
         elif self.direction is CardinalPoint.EAST:
@@ -72,7 +92,7 @@ class Vacuum:
 
         self.direction = new_direction
 
-    def turn_right(self) -> None:
+    def _turn_right(self) -> None:
         if self.direction is CardinalPoint.NORTH:
             new_direction = CardinalPoint.EAST
         elif self.direction is CardinalPoint.EAST:
@@ -95,16 +115,18 @@ class Surface:
 
         self.max_x = top_right_corner.x
         self.max_y = top_right_corner.y
-        self.vacuums: Set[Vacuum] = set()
+        self.vacuums: List[Vacuum] = []
 
-    def add_vacuum(self, position: Coordinates, direction: CardinalPoint) -> Vacuum:
+    def add_vacuum(
+        self,
+        position: Coordinates,
+        direction: CardinalPoint,
+        instructions: Iterable[Instruction]
+    ) -> Vacuum:
         self.validate(position)
-        vacuum = Vacuum(self, position, direction)
-        self.vacuums.add(vacuum)
+        vacuum = Vacuum(self, position, direction, instructions)
+        self.vacuums.append(vacuum)
         return vacuum
-
-    def remove_vacuum(self, vacuum: Vacuum) -> None:
-        self.vacuums.remove(vacuum)
 
     def validate(self, position: Coordinates) -> None:
         if (position.x < 0 or position.x > self.max_x

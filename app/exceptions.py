@@ -5,6 +5,7 @@ __all__ = (
     'InvalidSurfaceCoordinates',
     'InvalidVacuumDirection',
     'InvalidVacuumPosition',
+    'NoFurtherInstructions',
     'PositionDoesNotExist',
     'PositionIsNotEmpty',
     'UnknownInstruction',
@@ -34,6 +35,12 @@ class InvalidVacuumPosition(ValueError):
 
     def __init__(self, position: Coordinates) -> None:
         super().__init__(f'Vacuum position is not valid: {position}')
+
+
+class NoFurtherInstructions(StopIteration):
+
+    def __init__(self) -> None:
+        super().__init__('Vacuum has no further instructions')
 
 
 class PositionDoesNotExist(InvalidVacuumPosition):

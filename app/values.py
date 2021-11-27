@@ -33,4 +33,4 @@ class CardinalPoint(str, Enum):
 class Instruction(str, Enum):
     TURN_LEFT = 'L'
     TURN_RIGHT = 'R'
-    MOVE_FORWARD = 'M'
+    MOVE_FORWARD = 'F'

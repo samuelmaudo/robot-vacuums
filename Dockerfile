@@ -11,7 +11,7 @@ COPY main.py ./
 FROM base as command
 
 ENTRYPOINT ["python", "main.py"]
-CMD ["5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"]
+CMD ["5 5\n1 2 N\nLFLFLFLFF\n3 3 E\nFFRFFRFRRF"]
 
 FROM base as tests
 

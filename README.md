@@ -13,6 +13,7 @@ The provided input test case will be processed by default, resulting in this
 output: 
 
 ```
+DONE
 1 3 N
 5 1 E
 ```
@@ -20,7 +21,7 @@ output:
 If you want to process a different input, just add it to the end:
 
 ```shell
-docker-compose run --rm command $'0 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM'
+docker-compose run --rm command $'0 5\n1 2 N\nLFLFLFLFF\n3 3 E\nFFRFFRFRRF'
 ```
 
 For example, the previous input will result in this output:
@@ -33,7 +34,7 @@ _Note:_ If you want to run the command on Windows, you will have to make some
 minor adjustments:
 
 ```powershell
-docker compose run --rm command "0 5`n1 2 N`nLMLMLMLMM`n3 3 E`nMMRMMRMRRM"
+docker compose run --rm command "0 5`n1 2 N`nLFLFLFLFF`n3 3 E`nFFRFFRFRRF"
 ```
 
 ## Run tests through Docker
@@ -92,7 +93,7 @@ python -m pipenv shell
 Finally, you will be able to run the command:
 
 ```shell
-python main.py $'5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM'
+python main.py $'5 5\n1 2 N\nLFLFLFLFF\n3 3 E\nFFRFFRFRRF'
 ```
 
 And the test suite:
